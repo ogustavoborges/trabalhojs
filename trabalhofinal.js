@@ -1,13 +1,10 @@
-// Adicionar uma tarefa
-// Editar uma tarefa salva
-// Remover uma tarefa salva
-// Listar todas as tarefas salvas
-// Obter uma tarefa, através de um parâmetro (id)
+// Nome: Gustavo Borges
+// Turma: 1096
 
-//Tarefa -> nome, descrição, data.
-
+// Array de tarefas
 const tarefas = [];
 
+// Menu ToDo List
 function menu() {
   let opcao = 1;
   do {
@@ -25,72 +22,70 @@ function menu() {
     case 1:
       const nome = prompt("Nome da tarefa: ");
       const descricao = prompt("Descrição da tarefa");
-
       const addData = confirm("Deseja adicionar uma data?");
 
       if (addData) {
-        const data = prompt("Data da tarefa (dd/mm/yyyy): ");
+        const data = prompt("Data da tarefa (01/01/2023): ");
         addTarefa(nome, descricao, data);
       } else {
         addTarefa(nome, descricao);
       }
-
-      menu();
       break;
     case 2:
-      if (tarefas.length > 0) {
+      if (!listaVazia()) {
         const busca = parseInt(prompt("Digite o número da tarefa:"));
         const tarefa = findTarefa(busca);
         tarefa
           ? editTarefa(tarefa[0])
           : alert("Tarefa não encontrada! Tente novamente.");
-      } else {
-        alert("Ops, nenhuma tarefa foi adicionada!");
       }
-      menu();
       break;
     case 3:
-      if (tarefas.length > 0) {
-        const id = prompt("Digite o número da tarefa que deseja remover:");
+      if (!listaVazia()) {
+        const id = parseInt(
+          prompt("Digite o número da tarefa que deseja remover:")
+        );
         const tarefa = findTarefa(id);
-        tarefa? removeTarefa(tarefa[1]) : alert("Tarefa não encontrada! Tente novamente.");
-      } else {
-        alert("Ops, nenhuma tarefa foi adicionada!");
+        tarefa
+          ? removeTarefa(tarefa[1])
+          : alert("Tarefa não encontrada! Tente novamente.");
       }
-      menu();
       break;
     case 4:
-      if (tarefas.length > 0) {
-        listTarefas();
-      } else {
-        alert("Ops, nenhuma tarefa foi adicionada!");
-      }
-      menu();
+      !listaVazia() ? listTarefas() : "";
       break;
 
     case 5:
-      if (tarefas.length > 0) {
+      if (!listaVazia()) {
         const busca = parseInt(prompt("Digite o número da tarefa:"));
         const tarefa = findTarefa(busca);
         tarefa
           ? exibeTarefa(...tarefa)
           : alert("Tarefa não encontrada! Tente novamente.");
-      } else {
-        alert("Ops, nenhuma tarefa foi adicionada!");
       }
-      menu();
       break;
     case 6:
       alert("Desconectando...");
+      return;
       break;
 
     default:
       alert("Opção inválida, tente novamente!");
-      menu();
       break;
   }
+
+  menu();
+}
+// Verifica se a lista de tarefas está vazia
+function listaVazia() {
+  if (tarefas.length == 0) {
+    alert("Ops, nenhuma tarefa foi adicionada!");
+    return true;
+  }
+  return false;
 }
 
+// Exibe uma tarefa
 function exibeTarefa(tarefa, index) {
   alert(
     `|--------- Tarefa ${++index} ---------|\n\n| Nome: ${
@@ -101,11 +96,12 @@ function exibeTarefa(tarefa, index) {
   );
 }
 
-function addTarefa(nome, descricao, data = null) {
-  const tarefa = { nome, descricao, data };
-  tarefas.push(tarefa);
+//Adiciona uma tarefa
+function addTarefa(nome, descricao, data = '') {
+  tarefas.push({ nome, descricao, data });
 }
 
+//Edita uma tarefa
 function editTarefa(tarefa) {
   tarefa.nome = prompt(
     `| Nome: ${tarefa.nome}\n\n Digite o novo nome da tarefa:`
@@ -119,22 +115,27 @@ function editTarefa(tarefa) {
   return tarefa;
 }
 
-function removeTarefa(index) {
-  const teste = tarefas.splice(index, 1);
-  return teste;
+//Remove uma tarefa
+function removeTarefa(id) {
+  alert(
+    `Tarefa removida com sucesso!\n\n| Nome: ${tarefas[id].nome}\n\n| Descrição: ${tarefas[id].descricao}\n\n| Data: ${tarefas[id].data}\n`
+  );
+  const tarefaRemovida = tarefas.splice(id, 1);
+  return tarefaRemovida;
 }
 
-
+// Lista todas as tarefas
 function listTarefas() {
   tarefas.forEach((tarefa, index) => {
     exibeTarefa(tarefa, index);
   });
 }
 
+// Busca uma tarefa
 function findTarefa(id) {
   let retorno = false;
   tarefas.forEach((tarefa, index) => {
-    if (index == id - 1) {
+    if (index == (id - 1)) {
       return (retorno = [tarefa, index]);
     }
   });
