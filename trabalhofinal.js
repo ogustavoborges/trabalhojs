@@ -36,7 +36,7 @@ function menu() {
         const busca = parseInt(prompt("Digite o número da tarefa:"));
         const tarefa = findTarefa(busca);
         tarefa
-          ? editTarefa(tarefa[0])
+          ? editTarefa(tarefa)
           : alert("Tarefa não encontrada! Tente novamente.");
       }
       break;
@@ -47,7 +47,7 @@ function menu() {
         );
         const tarefa = findTarefa(id);
         tarefa
-          ? removeTarefa(tarefa[1])
+          ? removeTarefa(tarefa)
           : alert("Tarefa não encontrada! Tente novamente.");
       }
       break;
@@ -57,10 +57,10 @@ function menu() {
 
     case 5:
       if (!listaVazia()) {
-        const busca = parseInt(prompt("Digite o número da tarefa:"));
-        const tarefa = findTarefa(busca);
+        const idTarefa = parseInt(prompt("Digite o número da tarefa:"));
+        const tarefa = findTarefa(idTarefa);
         tarefa
-          ? exibeTarefa(...tarefa)
+          ? exibeTarefa(tarefa, idTarefa)
           : alert("Tarefa não encontrada! Tente novamente.");
       }
       break;
@@ -76,6 +76,7 @@ function menu() {
 
   menu();
 }
+
 // Verifica se a lista de tarefas está vazia
 function listaVazia() {
   if (tarefas.length == 0) {
@@ -88,7 +89,7 @@ function listaVazia() {
 // Exibe uma tarefa
 function exibeTarefa(tarefa, index) {
   alert(
-    `|--------- Tarefa ${++index} ---------|\n\n| Nome: ${
+    `|--------- Tarefa ${index} ---------|\n\n| Nome: ${
       tarefa.nome
     }\n\n| Descrição: ${tarefa.descricao}\n\n| Data: ${
       tarefa.data ? tarefa.data : "Não há"
@@ -97,7 +98,7 @@ function exibeTarefa(tarefa, index) {
 }
 
 //Adiciona uma tarefa
-function addTarefa(nome, descricao, data = '') {
+function addTarefa(nome, descricao, data = "") {
   tarefas.push({ nome, descricao, data });
 }
 
@@ -116,31 +117,24 @@ function editTarefa(tarefa) {
 }
 
 //Remove uma tarefa
-function removeTarefa(id) {
+function removeTarefa(tarefa) {
   alert(
-    `Tarefa removida com sucesso!\n\n| Nome: ${tarefas[id].nome}\n\n| Descrição: ${tarefas[id].descricao}\n\n| Data: ${tarefas[id].data}\n`
+    `Tarefa removida com sucesso!\n\n| Nome: ${tarefa.nome}\n\n| Descrição: ${tarefa.descricao}\n\n| Data: ${tarefa.data}\n`
   );
-  const tarefaRemovida = tarefas.splice(id, 1);
-  return tarefaRemovida;
+  const id = tarefas.indexOf(tarefa);
+  return tarefas.splice(id, 1);
 }
 
 // Lista todas as tarefas
 function listTarefas() {
   tarefas.forEach((tarefa, index) => {
-    exibeTarefa(tarefa, index);
+    exibeTarefa(tarefa, ++index);
   });
 }
 
 // Busca uma tarefa
 function findTarefa(id) {
-  let retorno = false;
-  tarefas.forEach((tarefa, index) => {
-    if (index == (id - 1)) {
-      return (retorno = [tarefa, index]);
-    }
-  });
-
-  return retorno;
+  return tarefas.find((tarefa) => tarefa == tarefas[id - 1]);
 }
 
 menu();
